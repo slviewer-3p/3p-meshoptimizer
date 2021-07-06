@@ -66,23 +66,15 @@ pushd "$MESHOPT_SOURCE_DIR"
             make
             make install
 
-            stage_lib="${stage}"/lib
-            stage_release="${stage_lib}"/release
+            mkdir -p "$stage/lib/release"
+            mv "$stage/lib/libmeshoptimizer.a" \
+                "$stage/lib/release/libmeshoptimizer.a"
 
-            # Move the libs to release folder
-            # mv "${stage}"/lib "${stage}"/release
-            # mkdir "${stage_lib}"
-            # mv "${stage}"/release "${stage_release}"
+            mkdir -p "$stage/include/meshoptimizer"
+            mv "$stage/include/meshoptimizer.h" \
+                "$stage/include/meshoptimizer/meshoptimizer.h"
 
-
-            # Make sure libs are stamped with the -id
-            # fix_dylib_id doesn't really handle symlinks
-            pushd "$stage_release"
-            fix_dylib_id "meshoptimizer.dylib" || \
-                echo "fix_dylib_id meshoptimizer.dylib failed, proceeding"
-            fix_dylib_id "meshoptimizer.dylib" || \
-                echo "fix_dylib_id meshoptimizer.dylib failed, proceeding"
-            popd
+            rm -r "$stage/lib/cmake"
         ;;
 
         linux*)
@@ -104,9 +96,15 @@ pushd "$MESHOPT_SOURCE_DIR"
             make -j $AUTOBUILD_CPU_COUNT
             make install
 
-            popd
-            mkdir -p "${stage}/lib/release"
-            mv ${stage}/lib/*.a "${stage}/lib/release"
+            mkdir -p "$stage/lib/release"
+            mv "$stage/lib/meshoptimizer.a" \
+                "$stage/lib/release/meshoptimizer.a"
+
+            mkdir -p "$stage/include/meshoptimizer"
+            mv "$stage/include/meshoptimizer.h" \
+                "$stage/include/meshoptimizer/meshoptimizer.h"
+
+            rm -r "$stage/lib/cmake"
         ;;
     esac
     mkdir -p "$stage/LICENSES"
