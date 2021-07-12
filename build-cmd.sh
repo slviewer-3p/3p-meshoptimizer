@@ -31,10 +31,12 @@ source_environment_tempfile="$stage/source_environment.sh"
 
 MESHOPT_SOURCE_DIR="meshoptimizer"
 
-version_str="0.16"
+# version will end with something like '160 /* 0.16 */'
+version=$(perl -ne 's/^#define MESHOPTIMIZER_VERSION ([0-9]{3,4})/$1/ && print' "${MESHOPT_SOURCE_DIR}/src/meshoptimizer.h" | tr -d '\r' )
+version_adj=$(awk -v a="$version" 'BEGIN{b = 1000; print (a / b)}')
 
 build=${AUTOBUILD_BUILD_ID:=0}
-echo "${version_str}.${build}" > "${stage}/VERSION.txt"
+echo "${version_adj}.${build}" > "${stage}/VERSION.txt"
 
 pushd "$MESHOPT_SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
