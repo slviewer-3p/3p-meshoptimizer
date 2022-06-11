@@ -93,14 +93,14 @@ pushd "$MESHOPT_SOURCE_DIR"
 
             rm -rf build && mkdir build && pushd build
 
-            cmake .. -DCMAKE_INSTALL_PREFIX:STRING="${stage}" \
+            cmake .. -DCMAKE_INSTALL_PREFIX:STRING="${stage}"
 
-            make -j $AUTOBUILD_CPU_COUNT
+            make -j 6
             make install
 
             mkdir -p "$stage/lib/release"
-            mv "$stage/lib/meshoptimizer.a" \
-                "$stage/lib/release/meshoptimizer.a"
+            mv "$stage/lib/libmeshoptimizer.a" \
+                "$stage/lib/release/libmeshoptimizer.a"
 
             mkdir -p "$stage/include/meshoptimizer"
             mv "$stage/include/meshoptimizer.h" \
@@ -110,7 +110,8 @@ pushd "$MESHOPT_SOURCE_DIR"
         ;;
     esac
     mkdir -p "$stage/LICENSES"
-    cp -a LICENSE.md "$stage/LICENSES/meshoptimizer.txt"
+    
+    cp -a ${top}/${MESHOPT_SOURCE_DIR}/LICENSE.md "$stage/LICENSES/meshoptimizer.txt"
 popd
 
 #mkdir -p "$stage"/docs/meshoptimizer/
