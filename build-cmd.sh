@@ -46,7 +46,6 @@ pushd "$MESHOPT_SOURCE_DIR"
 
             cmake ../${MESHOPT_SOURCE_DIR} -G"$AUTOBUILD_WIN_CMAKE_GEN" \
                 -DCMAKE_INSTALL_PREFIX="$(cygpath -m "$stage")"
-
             build_sln "meshoptimizer.sln" "Release|$AUTOBUILD_WIN_VSPLATFORM" "Install"
 
 
@@ -93,20 +92,19 @@ pushd "$MESHOPT_SOURCE_DIR"
 
             rm -rf build && mkdir build && pushd build
 
-            cmake .. -DCMAKE_INSTALL_PREFIX:STRING="${stage}"
+            cmake .. -DCMAKE_INSTALL_PREFIX:STRING="${stage}" -DCMAKE_INSTALL_LIBDIR:PATH=lib/
 
-            make -j 6
+            make -j `nproc`
             make install
 
             mkdir -p "$stage/lib/release"
-            mv "$stage/lib/libmeshoptimizer.a" \
-                "$stage/lib/release/libmeshoptimizer.a"
+            mv "$stage/lib/libmeshoptimizer.a" "$stage/lib/release/libmeshoptimizer.a"
 
             mkdir -p "$stage/include/meshoptimizer"
             mv "$stage/include/meshoptimizer.h" \
                 "$stage/include/meshoptimizer/meshoptimizer.h"
 
-            rm -r "$stage/lib/cmake"
+            rm -rf "$stage/lib/cmake"
         ;;
     esac
     mkdir -p "$stage/LICENSES"
